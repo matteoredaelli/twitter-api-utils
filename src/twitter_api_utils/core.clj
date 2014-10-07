@@ -35,29 +35,35 @@
     tweets))
 
 (defn fetch-user-timeline 
-  [buf params total]
-  (let [tweets (fetch-user-timeline-single params)
-        total-now (count tweets)
-        new-buf (concat tweets buf)
-        new-total (- total total-now)]    
-    ;; keep searching for older tweets until we have at least 1500
-    (if (and (> new-total 0) (>= total-now 100))
-      (recur new-buf params new-total (oldest-id tweets))
-      new-buf))
-
-  [buf params total max-id]
-  (let [other-params (merge params {:max_id max-id})
+  [params total max-id buf]
+  (let [other-params (if (> max-id 0) (merge params {:max_id max-id}) params)
         tweets (fetch-user-timeline-single other-params)
         total-now (count tweets)
         new-buf (concat tweets buf)
         new-total (- total total-now)]    
     ;; keep searching for older tweets until we have at least 1500
     (if (and (> new-total 0) (>= total-now 100))
-      (recur new-buf params new-total (oldest-id tweets))
+      (recur params new-total (oldest-id tweets) new-buf)
       new-buf))
 )
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(defn extract-entities-hashtags-from-tweets
+  [tweets]
+  ;; (sort-by val (frequencies (map clojure.string/lower-case (flatten (map #(map :text (:hashtags (:entities %))) a)))))
+  (map clojure.string/lower-case (flatten (map #(map :text (:hashtags (:entities %))) tweets))))
+
+(defn extract-entities-urls-from-tweets
+  [tweets]
+  (map clojure.string/lower-case (flatten (map #(map :expanded_url (:urls (:entities %))) tweets))))
+
+(defn extract-entities-user_mentions-from-tweets
+  [tweets]
+  (map clojure.string/lower-case (flatten (map #(map :screen_name (:user_mentions (:entities %))) tweets)))
+
+(defn most-frequent-n [n items]
+  (->> items
+    frequencies
+    (sort-by val)
+    reverse
+    (take n)
+    (map first)))
