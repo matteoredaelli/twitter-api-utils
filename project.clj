@@ -11,6 +11,7 @@
                  [cheshire "5.3.1"]
                  ;; configuration file
                  [environ "0.5.0"]
+                 [clojurewerkz/urly "1.0.0"]
                  ]
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]
                    :plugins [[lein-environ "0.5.0"]]

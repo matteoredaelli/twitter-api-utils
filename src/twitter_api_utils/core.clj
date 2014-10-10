@@ -11,6 +11,7 @@
    [twitter.api.restful]
    [twitter.api.search]
    [environ.core]
+   [clojurewerkz.urly.core]
    )
 )
 
@@ -42,7 +43,7 @@
         new-buf (concat tweets buf)
         new-total (- total total-now)]    
     ;; keep searching for older tweets until we have at least 1500
-    (if (and (> new-total 0) (>= total-now 100))
+    (if (and (> new-total 0) (> total-now 0))
       (recur params new-total (oldest-id tweets) new-buf)
       new-buf))
 )
@@ -56,14 +57,20 @@
   [tweets]
   (map clojure.string/lower-case (flatten (map #(map :expanded_url (:urls (:entities %))) tweets))))
 
+(defn extract-domains-from-urls
+  [urls]
+  (map path-of urls))
+
 (defn extract-entities-user_mentions-from-tweets
   [tweets]
-  (map clojure.string/lower-case (flatten (map #(map :screen_name (:user_mentions (:entities %))) tweets)))
+  (map clojure.string/lower-case (flatten (map #(map :screen_name (:user_mentions (:entities %))) tweets))))
 
-(defn most-frequent-n [n items]
+(defn most-frequent-n-with-counts [n items]
   (->> items
     frequencies
     (sort-by val)
     reverse
-    (take n)
-    (map first)))
+    (take n)))
+
+(defn most-frequent-n [n items]
+  (map first (most-frequent-n-with-counts n items)))
