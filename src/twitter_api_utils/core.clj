@@ -1,19 +1,15 @@
 (ns twitter-api-utils.core
   (:require ;; my
             [cheshire.core :refer :all])
-  (:use
+  (:use 
    [twitter.oauth]
-   [twitter.callbacks]
-   [twitter.callbacks.handlers]
    [twitter.api.restful]
    [twitter.utils]
    [twitter.request]
    [twitter.api.restful]
    [twitter.api.search]
    [environ.core]
-   [clojurewerkz.urly.core]
-   )
-)
+   [clojurewerkz.urly.core])) 
 
 (def oauth-creds (make-oauth-creds
                   (env :twitter-app-consumer-key)
@@ -51,6 +47,12 @@
       new-buf))
 )
 
+(defn extract-created-at-datetime-from-tweets
+  [tweets]
+  (map #(.parse (java.text.SimpleDateFormat. "EEE MMM dd HH:mm:ss zzz yyyy")  %)
+       (map :created_at tweets)))
+
+
 (defn extract-entities-hashtags-from-tweets
   [tweets]
   ;; (sort-by val (frequencies (map clojure.string/lower-case (flatten (map #(map :text (:hashtags (:entities %))) a)))))
@@ -62,11 +64,25 @@
 
 (defn extract-domains-from-urls
   [urls]
-  (map path-of urls))
+  (map host-of urls))
 
 (defn extract-entities-user_mentions-from-tweets
   [tweets]
   (map clojure.string/lower-case (flatten (map #(map :screen_name (:user_mentions (:entities %))) tweets))))
+
+(defn top-tweets-with-favorites [n tweets]
+  (->> tweets
+       (sort-by :favorite_count)
+       reverse
+       (take n)
+       ))
+
+(defn top-tweets-with-retweets [n tweets]
+  (->> tweets
+       (sort-by :retweet_count)
+       reverse
+       (take n)
+       ))
 
 (defn most-frequent-n-with-counts [n items]
   (->> items
