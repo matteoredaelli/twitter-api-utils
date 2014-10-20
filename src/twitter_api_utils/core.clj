@@ -29,6 +29,9 @@
   [params]
   (let [results (statuses-user-timeline
                  :oauth-creds oauth-creds
+                 :proxy (env :http-proxy-clj
+
+                             )
                  :params (merge params {:count 100}))
         tweets (:body results)
         total-now (count tweets)]
