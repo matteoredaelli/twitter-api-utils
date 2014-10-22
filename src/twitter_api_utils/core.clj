@@ -1,7 +1,7 @@
 (ns twitter-api-utils.core
   (:require ;; my
    [cheshire.core :refer :all]
-   [clj-http.client :as http.client]
+   [clj-http.client]
    )
   (:use 
    [twitter.oauth]
