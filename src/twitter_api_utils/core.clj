@@ -72,7 +72,7 @@
 
 (defn extract-domains-from-urls
   [urls]
-  (map host-of urls))
+  (map #(str (protocol-of %) "://" (host-of %)) urls))
 
 (defn extract-entities-user_mentions-from-tweets
   [tweets]
@@ -102,7 +102,7 @@
 (defn most-frequent-n [n items]
   (map first (most-frequent-n-with-counts n items)))
 
-;; (map #(try (get-url-title %) (catch Exception e (str "caught exception: " (.getMessage e)))) u)
+;; (map #(try (get-url-title %) (catch Exception e (.getMessage e))) u)
 (defn get-url-title [url]
   (let [headers (:headers (clj-http.client/head url))
         content-type (headers "Content-Type")
