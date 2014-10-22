@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>{{title}}</title>
+</head>
+<body>
+  <h1>{{title}}</h1>
+  <h2>{{Users}}</h2>
+  <table>
+  {% for u in users %}
+    <tr>
+      <td><img src="{{u.profile_image_url}}" /></td>
+      <td>{{u.screen_name}}</td>
+      <td>{{u.description}}</td>
+      <td>
+        <ul>
+          <li>tweets: {{u.statuses_count}}</li>
+          <li>favorites: {{u.favourites_count}}</li>
+          <li>followers: {{u.followers_count}}</li>
+          <li>friends: {{u.followers_count}}</li>
+        </ul>
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+
+  <h2>{{Users}}</h2>
+</body>
+</html>

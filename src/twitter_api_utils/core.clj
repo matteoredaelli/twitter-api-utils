@@ -1,6 +1,8 @@
 (ns twitter-api-utils.core
   (:require ;; my
-            [cheshire.core :refer :all])
+   [cheshire.core :refer :all]
+   [clj-http.client :as http.client]
+   )
   (:use 
    [twitter.oauth]
    [twitter.api.restful]
@@ -9,7 +11,8 @@
    [twitter.api.restful]
    [twitter.api.search]
    [environ.core]
-   [clojurewerkz.urly.core])) 
+   [clojurewerkz.urly.core]
+   [selmer.parser])) 
 
 (def oauth-creds (make-oauth-creds
                   (env :twitter-app-consumer-key)
@@ -46,6 +49,11 @@
       (recur params new-total (oldest-id tweets) new-buf)
       new-buf))
 )
+
+
+(defn extract-users-from-tweets
+  [tweets]
+  (distinct (map :user tweets)))
 
 (defn extract-created-at-datetime-from-tweets
   [tweets]
@@ -93,3 +101,26 @@
 
 (defn most-frequent-n [n items]
   (map first (most-frequent-n-with-counts n items)))
+
+(defn get-url-title [url]
+  (let [headers (:headers (clj-http.client/head url))
+        content-type (headers "Content-Type")
+        is-html (count (re-seq #"text/html" content-type))]
+    (if is-html
+      (let [body (:body (clj-http.client/get url))
+            title (trim (nth (re-find #"<title>(.*)</title>" body) 1))]
+        title)
+      content-type)))
+ 
+(defn split-text-to-words [text]
+  (re-seq #"\w+" text))
+
+(defn report-timeline-html [tweets]
+  (render-file "timeline.html" 
+               {:title "Yogthos" 
+                :users (distinct (map :user tweets))}))
+ 
+
+;; (def t (fetch-user-timeline-single {:screen-name "Pirelli_Media"}))
+;; (def u (extract-entities-urls-from-tweets t))
+;; (get-url-title (nth u 2))
