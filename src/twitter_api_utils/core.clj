@@ -102,22 +102,23 @@
 (defn most-frequent-n [n items]
   (map first (most-frequent-n-with-counts n items)))
 
+;; (map #(try (get-url-title %) (catch Exception e (str "caught exception: " (.getMessage e)))) u)
 (defn get-url-title [url]
   (let [headers (:headers (clj-http.client/head url))
         content-type (headers "Content-Type")
         is-html (count (re-seq #"text/html" content-type))]
     (if is-html
       (let [body (:body (clj-http.client/get url))
-            title (trim (nth (re-find #"<title>(.*)</title>" body) 1))]
+            title (clojure.string/trim (nth (re-find #"<title>(.*)</title>" body) 1))]
         title)
       content-type)))
  
 (defn split-text-to-words [text]
   (re-seq #"\w+" text))
 
-(defn report-timeline-html [tweets]
+(defn report-timeline-html [tweets title]
   (render-file "timeline.html" 
-               {:title "Yogthos" 
+               {:title title 
                 :users (distinct (map :user tweets))}))
  
 
