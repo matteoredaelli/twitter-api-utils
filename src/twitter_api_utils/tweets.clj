@@ -60,7 +60,7 @@
                          urls)]
     (render-file "timeline.html" 
                  {:title title 
-                  :users (map :user t) 
+                  :users (distinct (map :user t))
                   :tweets t
                   :hashtags (map #(clojure.string/join ": " %) (most-frequent-n-with-counts hashtags n))
                   :urls_domains (map #(clojure.string/join ": " %) (most-frequent-n-with-counts urls_domains n))

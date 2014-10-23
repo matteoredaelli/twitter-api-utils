@@ -24,9 +24,9 @@
   (let [{:keys [options arguments errors summary]} 
         (parse-opts args cli-options)
         screen-name (:timeline options)
-        tweets (fetch-user-timeline-single {:screen-name screen-name})
+        tweets (fetch-user-timeline {:screen-name screen-name} 600 0 [])
         ]
-    (println (report-timeline-html tweets screen-name 20))))
+    (println (report-timeline-html tweets screen-name 10))))
     
 ;; lein run -- -h
 ;; java -jar target/XXX-0.1.0-SNAPSHOT-standalone.jar -h
