@@ -14,9 +14,11 @@
                  [clojurewerkz/urly "1.0.0"]
                  [selmer "0.7.2"]
                  [clj-http "1.0.0"]
+                 [org.clojure/tools.cli "0.3.1"]
                  ]
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]
                    :plugins [[lein-environ "0.5.0"]
                              [cider/cider-nrepl "0.7.0"]]
                    }}
+  :main twitter-api-utils.core
   )
