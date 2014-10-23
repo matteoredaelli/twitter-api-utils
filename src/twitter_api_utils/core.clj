@@ -5,8 +5,7 @@
   (:use 
    [environ.core]
    [twitter-api-utils.twitter]
-   [twitter-api-utils.tweets]
-   [twitter-api-utils.urls])
+   [twitter-api-utils.tweets])
   (:gen-class))
 
 
@@ -26,10 +25,8 @@
         (parse-opts args cli-options)
         screen-name (:timeline options)
         tweets (fetch-user-timeline-single {:screen-name screen-name})
-        urls (extract-entities-urls-from-tweets tweets)
         ]
-    (println (clojure.string/join \newline urls))))
-    
+    (println (report-timeline-html tweets screen-name 20))))
     
 ;; lein run -- -h
 ;; java -jar target/XXX-0.1.0-SNAPSHOT-standalone.jar -h

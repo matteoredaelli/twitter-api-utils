@@ -30,25 +30,32 @@
   [tweets]
   (map clojure.string/lower-case (flatten (map #(map :screen_name (:user_mentions (:entities %))) tweets))))
 
-(defn top-tweets-with-favorites [n tweets]
+(defn top-tweets-with-favorites [tweets n]
   (->> tweets
        (sort-by :favorite_count)
        reverse
        (take n)
        ))
 
-(defn top-tweets-with-retweets [n tweets]
+(defn top-tweets-with-retweets [tweets n]
   (->> tweets
        (sort-by :retweet_count)
        reverse
        (take n)
        ))
 
-
-(defn report-timeline-html [tweets title]
+(defn report-timeline-html [tweets title n]
+  (let [t1 (top-tweets-with-retweets tweets n)
+        t2 (top-tweets-with-favorites tweets n)
+        t (distinct (concat t1 t2))
+        urls (distinct (extract-entities-urls-from-tweets t))
   (render-file "timeline.html" 
                {:title title 
-                :users (distinct (map :user tweets))}))
+                :users (distinct (map :user t))
+                :tweets t
+                :urls urls
+                
+                }))
  
 
 ;; (def t (fetch-user-timeline-single {:screen-name "Pirelli_Media"}))

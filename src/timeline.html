@@ -22,6 +22,16 @@
   {% endfor %}
   </table>
 
-  <h2>{{}}</h2>
+  <h2>Tweets</h2>
+ <table>
+  {% for t in tweets %}
+    <tr>
+      <td>{{u.created_at}}</td>
+      <td>{{u.text}}</td>
+      <td>{{u.retweet_count}}</td>
+      <td>{{u.favorite_count}}</td>
+    </tr>
+  {% endfor %}
+  </table>
 </body>
 </html>

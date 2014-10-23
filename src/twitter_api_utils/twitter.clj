@@ -32,7 +32,8 @@
                  :params (merge params {:count 100}))
         tweets (:body results)
         total-now (count tweets)]
-    (println "total tweets fetched: " total-now)
+    (binding [*out* *err*]
+      (println "total tweets fetched: " total-now))
     tweets))
 
 (defn fetch-user-timeline 
