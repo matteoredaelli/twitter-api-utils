@@ -3,6 +3,8 @@
    [cheshire.core :refer :all]
    )
   (:use 
+   [twitter-api-utils.urls]
+   [twitter-api-utils.utils]
    [selmer.parser])) 
 
 (defn oldest-id [tweets]
@@ -28,7 +30,7 @@
 
 (defn extract-entities-user_mentions-from-tweets
   [tweets]
-  (map clojure.string/lower-case (flatten (map #(map :screen_name (:user_mentions (:entities %))) tweets))))
+  (flatten (map #(get-in % [:entities :user_mentions :screen_name]) tweets)))
 
 (defn top-tweets-with-favorites [tweets n]
   (->> tweets
@@ -45,17 +47,26 @@
        ))
 
 (defn report-timeline-html [tweets title n]
-  (let [t1 (top-tweets-with-retweets tweets n)
-        t2 (top-tweets-with-favorites tweets n)
-        t (distinct (concat t1 t2))
-        urls (distinct (extract-entities-urls-from-tweets t))]
-  (render-file "timeline.html" 
-               {:title title 
-                :users (distinct (map :user t))
-                :tweets t
-                :urls urls
-                
-                })))
+  (let [;;t1 (top-tweets-with-retweets tweets n)
+        ;;t2 (top-tweets-with-favorites tweets n)
+        ;;t (distinct (concat t1 t2))
+        t tweets
+        hashtags (extract-entities-hashtags-from-tweets t)
+        user_mentions (extract-entities-user_mentions-from-tweets t)
+        urls (distinct (extract-entities-urls-from-tweets t))
+        urls_domains (distinct (extract-domains-from-urls urls))
+        urls_titles (map #(try (get-url-title %) 
+                               (catch Exception e (.getMessage e)))
+                         urls)]
+    (render-file "timeline.html" 
+                 {:title title 
+                  :users (map :user t) 
+                  :tweets t
+                  :hashtags (map #(clojure.string/join ": " %) (most-frequent-n-with-counts hashtags n))
+                  :urls_domains (map #(clojure.string/join ": " %) (most-frequent-n-with-counts urls_domains n))
+                  :urls_titles (distinct urls_titles)
+                  :user_mentions (map #(clojure.string/join ": " %) (most-frequent-n-with-counts user_mentions n))
+                  })))
  
 
 ;; (def t (fetch-user-timeline-single {:screen-name "Pirelli_Media"}))

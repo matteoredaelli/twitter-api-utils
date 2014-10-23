@@ -1,10 +1,16 @@
 <html>
 <head>
-  <title>{{title}}</title>
+  <title>@{{title}}</title>
 </head>
 <body>
-  <h1>{{title}}</h1>
+  <h1>@{{title}}</h1>
   <table>
+    <tr>
+      <td></td>
+      <td>User</td>
+      <td>Description</td>
+      <td>Statistics</td>
+    </tr>
   {% for u in users %}
     <tr>
       <td><img src="{{u.profile_image_url}}" /></td>
@@ -22,16 +28,65 @@
   {% endfor %}
   </table>
 
-  <h2>Tweets</h2>
+  <h2>Top hashtags</h2>
  <table>
-  {% for t in tweets %}
+  {% for u in hashtags %}
     <tr>
-      <td>{{u.created_at}}</td>
-      <td>{{u.text}}</td>
-      <td>{{u.retweet_count}}</td>
-      <td>{{u.favorite_count}}</td>
+      <td>{{u}}</td>
     </tr>
   {% endfor %}
   </table>
+
+  <h2>Top user mentions</h2>
+ <table>
+  {% for u in user_mentions %}
+    <tr>
+      <td>{{u}}</td>
+    </tr>
+  {% endfor %}
+  </table>
+
+  <h2>Tweets</h2>
+ <table>
+    <tr>
+      <td>Created</td>
+      <td>Text</td>
+      <td>Retweets</td>
+      <td>Favorites</td>
+    </tr>
+  {% for t in tweets %}
+    <tr>
+      <td>{{t.created_at}}</td>
+      <td>{{t.text}}</td>
+      <td>{{t.retweet_count}}</td>
+      <td>{{t.favorite_count}}</td>
+    </tr>
+  {% endfor %}
+  </table>
+
+  <h2>Top links</h2>
+ <table>
+    <tr>
+      <td>Url</td>
+    </tr>
+  {% for u in urls_titles %}
+    <tr>
+      <td>{{u}}</td>
+    </tr>
+  {% endfor %}
+  </table>
+
+  <h2>Top (link) sites</h2>
+ <table>
+    <tr>
+      <td>Domain</td>
+    </tr>
+  {% for u in urls_domains %}
+    <tr>
+      <td>{{u}}</td>
+    </tr>
+  {% endfor %}
+  </table>
+
 </body>
 </html>
