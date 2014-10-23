@@ -48,14 +48,14 @@
   (let [t1 (top-tweets-with-retweets tweets n)
         t2 (top-tweets-with-favorites tweets n)
         t (distinct (concat t1 t2))
-        urls (distinct (extract-entities-urls-from-tweets t))
+        urls (distinct (extract-entities-urls-from-tweets t))]
   (render-file "timeline.html" 
                {:title title 
                 :users (distinct (map :user t))
                 :tweets t
                 :urls urls
                 
-                }))
+                })))
  
 
 ;; (def t (fetch-user-timeline-single {:screen-name "Pirelli_Media"}))
