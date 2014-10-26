@@ -11,8 +11,7 @@
 
 (def cli-options
   ;; An option with a required argument
-  [["-t" "--timeline" "Timeline of this screen-name"
-    :default "matteoredaelli"]
+  [["-t" "--timeline" "First argument is an user, retreive his/her timeline"]
    ;; A non-idempotent option
    ["-v" nil "Verbosity level"
     :id :verbosity
@@ -23,10 +22,12 @@
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} 
         (parse-opts args cli-options)
-        screen-name (:timeline options)
-        tweets (fetch-user-timeline {:screen-name screen-name} 600 0 [])
+        screen-name (:first arguments)
+        tweets (fetch-user-timeline {:screen-name screen-name} 100 0 [])
         ]
-    (println (report-timeline-html tweets screen-name 10))))
+    ;;(println (first arguments))
+    (println (report-timeline-html tweets screen-name 10))
+    ))
     
 ;; lein run -- -h
 ;; java -jar target/XXX-0.1.0-SNAPSHOT-standalone.jar -h

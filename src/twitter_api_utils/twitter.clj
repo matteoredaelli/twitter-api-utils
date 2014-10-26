@@ -44,7 +44,7 @@
         new-buf (concat tweets buf)
         new-total (- total total-now)]    
     ;; keep searching for older tweets until we have at least 1500
-    (if (and (> new-total 0) (> total-now 0))
+    (if (and (> new-total 0) (> total-now 60))
       (recur params new-total (oldest-id tweets) new-buf)
       new-buf))
 )
