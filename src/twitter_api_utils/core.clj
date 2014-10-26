@@ -22,8 +22,8 @@
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} 
         (parse-opts args cli-options)
-        screen-name (:first arguments)
-        tweets (fetch-user-timeline {:screen-name screen-name} 100 0 [])
+        screen-name (first arguments)
+        tweets (fetch-user-timeline {:screen-name screen-name} 400 0 [])
         ]
     ;;(println (first arguments))
     (println (report-timeline-html tweets screen-name 10))

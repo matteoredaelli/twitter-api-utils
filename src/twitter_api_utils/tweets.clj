@@ -30,7 +30,7 @@
 
 (defn extract-entities-user_mentions-from-tweets
   [tweets]
-  (flatten (map #(get-in % [:entities :user_mentions :screen_name]) tweets)))
+  (map :screen_name (flatten (map #(get-in % [:entities :user_mentions]) tweets))))
 
 (defn top-tweets-with-favorites [tweets n]
   (->> tweets
@@ -72,3 +72,5 @@
 ;; (def t (fetch-user-timeline-single {:screen-name "Pirelli_Media"}))
 ;; (def u (extract-entities-urls-from-tweets t))
 ;; (get-url-title (nth u 2))
+
+;; (most-frequent-n-with-counts (flatten (map split-text-to-words (map :text tweets))) 20)
