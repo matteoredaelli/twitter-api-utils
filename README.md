@@ -5,7 +5,12 @@ twitter-api-utils
 
 Add in your file $HOME/.lein/profiles.clj 
 
-	{:user {:env { :twitter-app-consumer-key "mykey" :twitter-app-consumer-secret "my-secr" :twitter-user-access-token "my-tock" :twitter-user-access-token-secret "my-tock-secr" }}}
+	{:user {:env {
+			:http-proxy-clj {:host "myproxy.com" :port 80}
+			:twitter-app-consumer-key "mykey" 
+			:twitter-app-consumer-secret "my-secr" 
+			:twitter-user-access-token "my-tock" 
+			:twitter-user-access-token-secret "my-tock-secr"}}}
 
 
 ##Author
