@@ -13,6 +13,4 @@
 (defn most-frequent-n [items n]
   (map first (most-frequent-n-with-counts items n)))
 
-(defn extract-words-from-text [text]
-  (re-seq #"\w+" text))
  
