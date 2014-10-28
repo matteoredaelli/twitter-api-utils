@@ -11,17 +11,6 @@
 (defn oldest-id [tweets]
   (apply min (map :id tweets)))
 
-(defn clean-tweets
-  ([tweets]
-   (map #(clean-text (:text %)
-                     ["remove-RTs" 
-                      "remove-urls"
-                      "remove-extra-whitespaces"])
-        tweets))
-  ([tweets options]
-   (map #(clean-text (:text %) options) tweets))
-)
-
 (defn extract-users-from-tweets
   [tweets]
   (distinct (map :user tweets)))
@@ -44,6 +33,15 @@
   [tweets]
   (map :screen_name (flatten (map #(get-in % [:entities :user_mentions]) tweets))))
 
+(defn extract-cleaned-text-from-tweets
+  [tweets]
+  (let [text (clojure.string/join " " (map :text tweets))]
+    (clean-text text
+                ["remove-RTs" 
+                 "remove-urls"
+                 "tolower"
+                 "remove-extra-whitespaces"])))
+
 (defn top-tweets-with-favorites [tweets n]
   (->> tweets
        (sort-by :favorite_count)
@@ -63,6 +61,8 @@
         ;;t2 (top-tweets-with-favorites tweets n)
         ;;t (distinct (concat t1 t2))
         t tweets
+        cleaned_text (extract-cleaned-text-from-tweets t)
+        top_words (most-frequent-n (extract-words-from-text cleaned_text) 50)
         hashtags (extract-entities-hashtags-from-tweets t)
         user_mentions (extract-entities-user_mentions-from-tweets t)
         urls (distinct (extract-entities-urls-from-tweets t))
@@ -74,6 +74,7 @@
                  {:title title 
                   :users (distinct (map :user t))
                   :tweets t
+                  :top_words top_words
                   :hashtags (map #(clojure.string/join ": " %) (most-frequent-n-with-counts hashtags n))
                   :urls_domains (map #(clojure.string/join ": " %) (most-frequent-n-with-counts urls_domains n))
                   :urls_titles (distinct urls_titles)

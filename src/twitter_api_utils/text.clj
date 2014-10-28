@@ -16,6 +16,7 @@
 (defn remove-extra-whitespaces-from-text [text]
   (clojure.string/trim (clojure.string/replace text #"[ ]{2,}+", " ")))
 
+
 (defn clean-text [text options]
   (let [option (first options)
         other-options (rest options)]
@@ -23,10 +24,12 @@
        nil text
        [] text
        "remove-RTs" (clean-text (clojure.string/replace text
-                                                        #"^RT @[^ ]+:"
-                                                        "")
+                                                        "RT "
+                                                        " ")
                                 other-options)
        "remove-urls" (clean-text (remove-urls-from-text text)
                                  other-options)
        "remove-extra-whitespaces" (clean-text (remove-extra-whitespaces-from-text text)
-                                  other-options))))
+                                  other-options)
+       "tolower" (clean-text (clojure.string/lower-case text) other-options)
+       )))

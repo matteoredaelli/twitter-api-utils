@@ -37,6 +37,15 @@
   {% endfor %}
   </table>
 
+  <h2>Top words</h2>
+ <table>
+  {% for u in top_words %}
+    <tr>
+      <td>{{u}}</td>
+    </tr>
+  {% endfor %}
+  </table>
+
   <h2>Top user mentions</h2>
  <table>
   {% for u in user_mentions %}
