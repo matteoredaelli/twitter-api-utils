@@ -30,3 +30,10 @@
                                  other-options)
        "remove-extra-whitespaces" (clean-text (remove-extra-whitespaces-from-text text)
                                   other-options))))
+
+(defn extract-stopwords-from-file [filename]
+  (set (clojure.string/split (slurp filename) #"\n")))
+ 
+(defn remove-stopwords-from-words [words stopwords]
+  (remove stopwords words))
+ 

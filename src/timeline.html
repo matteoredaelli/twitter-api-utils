@@ -5,6 +5,7 @@
 <body>
   <h1>@{{title}}</h1>
   <table>
+    <tbody>
     <tr>
       <td></td>
       <td>User</td>
@@ -26,28 +27,45 @@
       </td>
     </tr>
   {% endfor %}
+    </tbody>
   </table>
 
   <h2>Top hashtags</h2>
  <table>
+    <tbody>
   {% for u in hashtags %}
     <tr>
       <td>{{u}}</td>
     </tr>
   {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>Top words</h2>
+ <table>
+    <tbody>
+  {% for u in top_words %}
+    <tr>
+      <td>{{u}}</td>
+    </tr>
+  {% endfor %}
+    </tbody>
   </table>
 
   <h2>Top user mentions</h2>
  <table>
+    <tbody>
   {% for u in user_mentions %}
     <tr>
       <td>{{u}}</td>
     </tr>
   {% endfor %}
+    </tbody>
   </table>
 
   <h2>Tweets</h2>
  <table>
+    <tbody>
     <tr>
       <td>Created</td>
       <td>Text</td>
@@ -62,10 +80,13 @@
       <td>{{t.favorite_count}}</td>
     </tr>
   {% endfor %}
+    </tbody>
   </table>
+
 
   <h2>Top links</h2>
  <table>
+    <tbody>
     <tr>
       <td>Url</td>
     </tr>
@@ -74,10 +95,12 @@
       <td>{{u}}</td>
     </tr>
   {% endfor %}
+    </tbody>
   </table>
 
   <h2>Top (link) sites</h2>
  <table>
+    <tbody>
     <tr>
       <td>Domain</td>
     </tr>
@@ -86,6 +109,7 @@
       <td>{{u}}</td>
     </tr>
   {% endfor %}
+    </tbody>
   </table>
 
 </body>

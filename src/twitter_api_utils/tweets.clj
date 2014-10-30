@@ -58,11 +58,13 @@
        (take n)
        ))
 
-(defn report-timeline-html [tweets title n]
+(defn report-timeline-html [tweets title n stopwords]
   (let [;;t1 (top-tweets-with-retweets tweets n)
         ;;t2 (top-tweets-with-favorites tweets n)
         ;;t (distinct (concat t1 t2))
         t tweets
+        words (flatten (map extract-words-from-text (clean-tweets tweets)))
+        filtered_words (remove-stopwords-from-words words stopwords)
         hashtags (extract-entities-hashtags-from-tweets t)
         user_mentions (extract-entities-user_mentions-from-tweets t)
         urls (distinct (extract-entities-urls-from-tweets t))
@@ -74,15 +76,12 @@
                  {:title title 
                   :users (distinct (map :user t))
                   :tweets t
+                  :top_words (map #(clojure.string/join ": " %) (most-frequent-n-with-counts filtered_words n))
                   :hashtags (map #(clojure.string/join ": " %) (most-frequent-n-with-counts hashtags n))
                   :urls_domains (map #(clojure.string/join ": " %) (most-frequent-n-with-counts urls_domains n))
                   :urls_titles (distinct urls_titles)
                   :user_mentions (map #(clojure.string/join ": " %) (most-frequent-n-with-counts user_mentions n))
                   })))
  
-
-;; (def t (fetch-user-timeline-single {:screen-name "Pirelli_Media"}))
-;; (def u (extract-entities-urls-from-tweets t))
-;; (get-url-title (nth u 2))
 
 ;; (most-frequent-n-with-counts (flatten (map split-text-to-words (map :text tweets))) 20)
