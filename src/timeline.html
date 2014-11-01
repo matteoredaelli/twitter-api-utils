@@ -4,7 +4,7 @@
 </head>
 <body>
 
-  <h1>@{{title}}</h1>
+  <!-- <h1>@{{title}}</h1> -->
   <div class="table-responsive">
     <table class="table table-striped">
       <tbody>
@@ -13,7 +13,7 @@
 	  <td><img src="{{u.profile_image_url}}" /></td>
 	  <td>
             <ul>
-              <li>user name: {{u.screen_name}}</li>
+              <li>user name: {{u.name}}</li>
               <li>description: {{u.description}}</li>
               <li>tweets: {{u.statuses_count}}</li>
               <li>favorites: {{u.favourites_count}}</li>
@@ -61,7 +61,7 @@
 
 
 
-  <h2>Top links</h2>
+  <h2>Links: page titles</h2>
   <div class="table-responsive">
     <table class="table table-striped">
       <tbody>
@@ -74,7 +74,7 @@
     </table>
   </div>
 
-  <h2>Top (link) sites</h2>
+  <h2>Links: websites</h2>
   <div class="table-responsive">
     <table class="table table-striped">
       <tbody>
@@ -109,6 +109,6 @@
       </tbody>
     </table>
   </div>
-
+<p>These statistics are related to the timeline (about latest 300 tweets) of the user @{{title}}</p>
 </body>
 </html>

@@ -76,8 +76,8 @@
                   :tweets t
                   :top_words (map #(clojure.string/join ": " %) (most-frequent-n-with-counts filtered_words n))
                   :hashtags (map #(clojure.string/join ": " %) (most-frequent-n-with-counts hashtags n))
-                  :urls_domains (map #(clojure.string/join ": " %) (most-frequent-n-with-counts urls_domains n))
-                  :urls_titles (map #(clojure.string/join ": " %) (most-frequent-n-with-counts urls_titles n))
+                  :urls_domains (distinct urls_domains)
+                  :urls_titles (distinct urls_titles)
                   :user_mentions (map #(clojure.string/join ": " %) (most-frequent-n-with-counts user_mentions n))
                   })))
  

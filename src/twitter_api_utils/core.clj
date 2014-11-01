@@ -6,7 +6,8 @@
    [environ.core]
    [twitter-api-utils.twitter]
    [twitter-api-utils.tweets]
-   [twitter-api-utils.text])
+   [twitter-api-utils.text]
+   [postal.core])
   (:gen-class))
 
 
@@ -20,6 +21,14 @@
     "--stopwords FILENAME" 
     "stopword file"
     :default "stopwords.txt"]
+   ["-T" 
+    "--to EMAIL" 
+    "email address"
+    :default "XXXX@blogspt.com"]
+  ["-F" 
+    "--from EMAIL" 
+    "email address"
+    :default "XXXX@blogspt.com"]
    ;;["-c" "--count COUNT" "how many tweets to be retreived"
    ;; :default 200
    ;; :parse-fn #(Integer/parseInt %)]
@@ -33,17 +42,27 @@
   (let [{:keys [options arguments errors summary]} 
         (parse-opts args cli-options)
         screen-name (:timeline options)
+        from (:from options)
+        to (:to options)
         stopwords (extract-stopwords-from-file (:stopwords options))
         ;;tweets (fetch-user-timeline {:screen-name screen-name} {:count options} 0 [])
+        ;; today
+        now (.getTime (java.util.Calendar/getInstance))
+        f2  (java.text.SimpleDateFormat. "MMMM_yyyy")
+        today-string (clojure.string/lower-case (.format f2 now))
+
         tweets (fetch-user-timeline {:screen-name screen-name} 300 0 [])
+        body (report-timeline-html tweets screen-name 10 stopwords)
         ]
 
-    (binding [*out* *err*]
-      (println "Starting analysing tweets.."))
-
-    (println (report-timeline-html tweets screen-name 10 stopwords))
-    ))
-    
+    (send-message {:host "localhost"}
+                  {:from [from]
+                   :to [to]
+                   :subject (str screen-name "-twitter-" today-string)
+                   :body [{:type "text/html; charset=utf-8"
+                           :content body}]
+                   
+                   })))
 ;; lein run -- -h
 ;; java -jar target/XXX-0.1.0-SNAPSHOT-standalone.jar -h
 
