@@ -13,6 +13,9 @@ Add in your file $HOME/.lein/profiles.clj
 			:twitter-user-access-token-secret "my-tock-secr"}}}
 
 
+wget https://raw.githubusercontent.com/ageitgey/node-unfluff/master/data/stopwords/stopwords-it.txt
+wget https://raw.githubusercontent.com/ageitgey/node-unfluff/master/data/stopwords/stopwords-en.txt
+
 ##Author
 
 matteo DOT redaelli AT gmail DOT com

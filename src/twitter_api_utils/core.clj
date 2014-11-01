@@ -5,14 +5,24 @@
   (:use 
    [environ.core]
    [twitter-api-utils.twitter]
-   [twitter-api-utils.tweets])
+   [twitter-api-utils.tweets]
+   [twitter-api-utils.text])
   (:gen-class))
 
 
 (def cli-options
   ;; An option with a required argument
-  [["-t" "--timeline" "First argument is an user, retreive his/her timeline"]
-   ;; A non-idempotent option
+  [["-t" 
+    "--timeline USERNAME" 
+    "username: retreive his/her timeline"
+    :default "matteoredaelli"]
+   ["-s" 
+    "--stopwords FILENAME" 
+    "stopword file"
+    :default "stopwords.txt"]
+   ;;["-c" "--count COUNT" "how many tweets to be retreived"
+   ;; :default 200
+   ;; :parse-fn #(Integer/parseInt %)]
    ["-v" nil "Verbosity level"
     :id :verbosity
     :default 0
@@ -22,11 +32,16 @@
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} 
         (parse-opts args cli-options)
-        screen-name (first arguments)
-        tweets (fetch-user-timeline {:screen-name screen-name} 100 0 [])
+        screen-name (:timeline options)
+        stopwords (extract-stopwords-from-file (:stopwords options))
+        ;;tweets (fetch-user-timeline {:screen-name screen-name} {:count options} 0 [])
+        tweets (fetch-user-timeline {:screen-name screen-name} 300 0 [])
         ]
-    ;;(println (first arguments))
-    (println (report-timeline-html tweets screen-name 10))
+
+    (binding [*out* *err*]
+      (println "Starting analysing tweets.."))
+
+    (println (report-timeline-html tweets screen-name 10 stopwords))
     ))
     
 ;; lein run -- -h

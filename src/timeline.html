@@ -3,99 +3,112 @@
   <title>@{{title}}</title>
 </head>
 <body>
+
   <h1>@{{title}}</h1>
-  <table>
-    <tr>
-      <td></td>
-      <td>User</td>
-      <td>Description</td>
-      <td>Statistics</td>
-    </tr>
-  {% for u in users %}
-    <tr>
-      <td><img src="{{u.profile_image_url}}" /></td>
-      <td>{{u.screen_name}}</td>
-      <td>{{u.description}}</td>
-      <td>
-        <ul>
-          <li>tweets: {{u.statuses_count}}</li>
-          <li>favorites: {{u.favourites_count}}</li>
-          <li>followers: {{u.followers_count}}</li>
-          <li>friends: {{u.followers_count}}</li>
-        </ul>
-      </td>
-    </tr>
-  {% endfor %}
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tbody>
+	{% for u in users %}
+	<tr>
+	  <td><img src="{{u.profile_image_url}}" /></td>
+	  <td>
+            <ul>
+              <li>user name: {{u.screen_name}}</li>
+              <li>description: {{u.description}}</li>
+              <li>tweets: {{u.statuses_count}}</li>
+              <li>favorites: {{u.favourites_count}}</li>
+              <li>followers: {{u.followers_count}}</li>
+              <li>friends: {{u.friends_count}}</li>
+            </ul>
+	  </td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-  <h2>Top hashtags</h2>
- <table>
-  {% for u in hashtags %}
-    <tr>
-      <td>{{u}}</td>
-    </tr>
-  {% endfor %}
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tbody>
+	<tr>
+	  <td><h2>Top hashtags</h2></td>
+	  <td><h2>Top words</h2></td>
+	  <td><h2>Top user mentions</h2></td>
+	</tr>
+	<tr>
+	  <td>
+	    {% for u in hashtags %}
+	    {{u}}
+	    <br />
+	    {% endfor %}
+	  </td>
+	  <td>
+	    {% for u in top_words %}
+	    {{u}}
+	    <br />
+	    {% endfor %}
+	  </td>
+	  <td>
+	    {% for u in user_mentions %}
+	    {{u}}
+	    <br />
+	    {% endfor %}
+	  </td>
+	</tr>
+      </tbody>
+    </table>
+  </div>
 
-  <h2>Top words</h2>
- <table>
-  {% for u in top_words %}
-    <tr>
-      <td>{{u}}</td>
-    </tr>
-  {% endfor %}
-  </table>
 
-  <h2>Top user mentions</h2>
- <table>
-  {% for u in user_mentions %}
-    <tr>
-      <td>{{u}}</td>
-    </tr>
-  {% endfor %}
-  </table>
-
-  <h2>Tweets</h2>
- <table>
-    <tr>
-      <td>Created</td>
-      <td>Text</td>
-      <td>Retweets</td>
-      <td>Favorites</td>
-    </tr>
-  {% for t in tweets %}
-    <tr>
-      <td>{{t.created_at}}</td>
-      <td>{{t.text}}</td>
-      <td>{{t.retweet_count}}</td>
-      <td>{{t.favorite_count}}</td>
-    </tr>
-  {% endfor %}
-  </table>
 
   <h2>Top links</h2>
- <table>
-    <tr>
-      <td>Url</td>
-    </tr>
-  {% for u in urls_titles %}
-    <tr>
-      <td>{{u}}</td>
-    </tr>
-  {% endfor %}
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tbody>
+	{% for u in urls_titles %}
+	<tr>
+	  <td>{{u}}</td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
 
   <h2>Top (link) sites</h2>
- <table>
-    <tr>
-      <td>Domain</td>
-    </tr>
-  {% for u in urls_domains %}
-    <tr>
-      <td>{{u}}</td>
-    </tr>
-  {% endfor %}
-  </table>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tbody>
+	{% for u in urls_domains %}
+	<tr>
+	  <td>{{u}}</td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+
+  <h2>Tweets</h2>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <tbody>
+	<tr>
+	  <td>Created</td>
+	  <td>Text</td>
+	  <td>Retweets</td>
+	  <td>Favorites</td>
+	</tr>
+	{% for t in tweets %}
+	<tr>
+	  <td>{{t.created_at}}</td>
+	  <td>{{t.text}}</td>
+	  <td>{{t.retweet_count}}</td>
+	  <td>{{t.favorite_count}}</td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
 
 </body>
 </html>
