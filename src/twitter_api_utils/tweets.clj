@@ -56,30 +56,38 @@
        (take n)
        ))
 
-(defn report-timeline-html [tweets title n stopwords]
-  (let [;;t1 (top-tweets-with-retweets tweets n)
-        ;;t2 (top-tweets-with-favorites tweets n)
-        ;;t (distinct (concat t1 t2))
-        t tweets
-        words (extract-words-from-text (extract-cleaned-text-from-tweets t))
+(defn tweets-statistics [tweets n stopwords]
+  (let [words (extract-words-from-text (extract-cleaned-text-from-tweets tweets))
         filtered_words (remove-stopwords-from-words words stopwords)
-        hashtags (extract-entities-hashtags-from-tweets t)
-        user_mentions (extract-entities-user_mentions-from-tweets t)
-        urls (distinct (extract-entities-urls-from-tweets t))
+        hashtags (extract-entities-hashtags-from-tweets tweets)
+        user_mentions (extract-entities-user_mentions-from-tweets tweets)
+        urls (distinct (extract-entities-urls-from-tweets tweets))
         urls_domains (distinct (extract-domains-from-urls urls))
         urls_titles (map #(try (get-url-title %) 
                                (catch Exception e (.getMessage e)))
                          urls)]
-    (render-file "timeline.html" 
-                 {:title title 
-                  :users (distinct (map :user t))
-                  :tweets t
-                  :top_words (map #(clojure.string/join ": " %) (most-frequent-n-with-counts filtered_words n))
-                  :hashtags (map #(clojure.string/join ": " %) (most-frequent-n-with-counts hashtags n))
-                  :urls_domains (distinct urls_domains)
-                  :urls_titles (distinct urls_titles)
-                  :user_mentions (map #(clojure.string/join ": " %) (most-frequent-n-with-counts user_mentions n))
-                  })))
+    {:words words
+     :top_words (most-frequent-n-with-counts filtered_words n)
+     :hashtags hashtags
+     :top_hashtags (most-frequent-n-with-counts hashtags n)
+     :user_mentions user_mentions
+     :top_user_mentions (most-frequent-n-with-counts user_mentions n)
+     :urls urls
+     :urls_domains urls_domains
+     :urls_titles urls_titles}))
+
+    
+(defn timeline-statistics-to-html [tweets stats title]
+  (render-file "timeline.html" 
+               {:title title 
+                :users (distinct (map :user tweets))
+                :tweets tweets
+                :top_words (map #(clojure.string/join ": " %) (:top_words stats))
+                :hashtags (map #(clojure.string/join ": " %) (:top_hashtags stats))
+                :urls_domains (distinct (:urls_domains stats))
+                :urls_titles (distinct (:urls_titles stats))
+                :user_mentions (map #(clojure.string/join ": " %) (:top_user_mentions stats))
+                }))
  
 
 ;; (most-frequent-n-with-counts (flatten (map split-text-to-words (map :text tweets))) 20)

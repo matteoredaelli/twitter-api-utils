@@ -1,6 +1,7 @@
 (ns twitter-api-utils.core
   (:require ;; my
    [clojure.tools.cli :refer [parse-opts]]
+   [cheshire.core :refer :all]
    )
   (:use 
    [environ.core]
@@ -13,8 +14,8 @@
 
 (def cli-options
   ;; An option with a required argument
-  [["-t" 
-    "--timeline USERNAME" 
+  [["-u" 
+    "--user USERNAME" 
     "username: retreive his/her timeline"
     :default "matteoredaelli"]
    ["-s" 
@@ -24,14 +25,21 @@
    ["-T" 
     "--to EMAIL" 
     "email address"
-    :default "XXXX@blogspt.com"]
-  ["-F" 
+    :default nil]
+   ["-F" 
     "--from EMAIL" 
     "email address"
     :default "XXXX@blogspt.com"]
-   ;;["-c" "--count COUNT" "how many tweets to be retreived"
-   ;; :default 200
-   ;; :parse-fn #(Integer/parseInt %)]
+   ["-c"
+    "--count COUNT" "how many tweets to be retreived"
+    :default 200
+    :parse-fn #(Integer/parseInt %)]
+   ["-t"
+    "--top COUNT" "extract TOP n"
+    :default 5
+    :parse-fn #(Integer/parseInt %)]
+   ["-j" "--json"
+    :default 0]
    ["-v" nil "Verbosity level"
     :id :verbosity
     :default 0
@@ -41,33 +49,32 @@
 (defn -main [& args]
   (let [{:keys [options arguments errors summary]} 
         (parse-opts args cli-options)
-        screen-name (:timeline options)
+        screen-name (:user options)
+        count (:count options)
         from (:from options)
         to (:to options)
+        top (:top options)
         stopwords (extract-stopwords-from-file (:stopwords options))
         ;;tweets (fetch-user-timeline {:screen-name screen-name} {:count options} 0 [])
         ;; today
         now (.getTime (java.util.Calendar/getInstance))
         f2  (java.text.SimpleDateFormat. "MMMM_yyyy")
         today-string (clojure.string/lower-case (.format f2 now))
-
-        tweets (fetch-user-timeline {:screen-name screen-name} 300 0 [])
-        body (report-timeline-html tweets screen-name 10 stopwords)
+        tweets (fetch-user-timeline {:screen-name screen-name} count 0 [])
+        stats (tweets-statistics tweets top stopwords)
         ]
-
-    (send-message {:host "localhost"}
-                  {:from [from]
-                   :to [to]
-                   :subject (str screen-name "-twitter-" today-string)
-                   :body [{:type "text/html; charset=utf-8"
-                           :content body}]
-                   
-                   })))
+    (cond (:json options) (println (generate-string stats))
+          to (let [body (timeline-statistics-to-html tweets stats screen-name)]
+               (send-message {:host "localhost"}
+                             {:from [from]
+                              :to [to]
+                              :subject (str screen-name "-twitter-" today-string)
+                              :body [{:type "text/html; charset=utf-8"
+                                      :content body}]
+                              })))))
+    
 ;; lein run -- -h
 ;; java -jar target/XXX-0.1.0-SNAPSHOT-standalone.jar -h
 
 
-    
-;; (def t (fetch-user-timeline-single {:screen-name "Pirelli_Media"}))
-;; (def u (extract-entities-urls-from-tweets t))
-;; (get-url-title (nth u 2))
+;; lein run -- -t matteoredaelli -s stopwords.txt -c 10 -j -t 3
