@@ -79,7 +79,7 @@
         urls (distinct (extract-entities-urls-from-tweets tweets))
         urls_domains (distinct (extract-domains-from-urls urls))
         urls_titles (map #(safe-get-url-title %) urls)]
-    {:words words
+    {;;:words words
      :top_words (most-frequent-n-with-counts filtered_words n)
      :hashtags hashtags
      :top_hashtags (most-frequent-n-with-counts hashtags n)
