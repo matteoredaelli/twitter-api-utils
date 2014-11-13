@@ -78,9 +78,7 @@
         user_mentions (extract-entities-user_mentions-from-tweets tweets)
         urls (distinct (extract-entities-urls-from-tweets tweets))
         urls_domains (distinct (extract-domains-from-urls urls))
-        urls_titles (map #(try (get-url-title %) 
-                               (catch Exception e (.getMessage e)))
-                         urls)]
+        urls_titles (map #(safe-get-url-title %) urls)]
     {:words words
      :top_words (most-frequent-n-with-counts filtered_words n)
      :hashtags hashtags
@@ -89,8 +87,9 @@
      :top_user_mentions (most-frequent-n-with-counts user_mentions n)
      :urls urls
      :urls_domains urls_domains
-     :urls_titles urls_titles}))
-
+     urls_titles (filter #(not (re-find #"^clj-http" %)) (remove nil? urls_titles))
+     ;;:urls_titles  urls_titles
+     }))
     
 (defn timeline-statistics-to-html [tweets stats title]
   (render-file "timeline.html" 
@@ -103,6 +102,3 @@
                 :urls_titles (distinct (:urls_titles stats))
                 :user_mentions (map #(clojure.string/join ": " %) (:top_user_mentions stats))
                 }))
- 
-
-;; (most-frequent-n-with-counts (flatten (map split-text-to-words (map :text tweets))) 20)

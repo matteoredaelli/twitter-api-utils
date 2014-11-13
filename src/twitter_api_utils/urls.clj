@@ -33,7 +33,11 @@
         content-type (headers "Content-Type")
         is-html (count (re-seq #"text/html" content-type))]
     (if is-html
-      (let [body (:body (clj-http.client/get url))
+      (let [body (:body clj-http.client/get url)
             title (clojure.string/trim (nth (re-find #"<title>(.*)</title>" body) 1))]
         title)
       content-type)))
+
+(defn safe-get-url-title [url]
+  (try (get-url-title url)
+       (catch Exception e (.getMessage e))))

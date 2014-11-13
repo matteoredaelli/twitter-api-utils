@@ -92,4 +92,4 @@
 ;; java -jar target/XXX-0.1.0-SNAPSHOT-standalone.jar -h
 
 
-;; lein run -- -t matteoredaelli -s stopwords.txt -c 10 -j -t 3
+;; lein run -- -u matteoredaelli -s stopwords.txt -c 10 -j -t 3
