@@ -26,7 +26,13 @@
   (re-seq #"\w+" text))
 
 (defn remove-urls-from-text [text]
-  (clojure.string/replace text #"http[s]*://[^ ]+" ""))
+  (clojure.string/replace text #"http[s]*://[^ !?,;:.]+" ""))
+
+(defn remove-hashtags-from-text [text]
+  (clojure.string/replace text #"#[^ !?,;:.]+" ""))
+
+(defn remove-user_mentions-from-text [text]
+  (clojure.string/replace text #"@[^  !?,;:.]+" ""))
 
 (defn remove-extra-whitespaces-from-text [text]
   (clojure.string/trim (clojure.string/replace text #"[ ]{2,}+", " ")))
@@ -42,6 +48,10 @@
                                                         "RT "
                                                         " ")
                                 other-options)
+       "remove-hashtags" (clean-text (remove-hashtags-from-text text)
+                                     other-options)
+       "remove-user_mentions" (clean-text (remove-user_mentions-from-text text)
+                                 other-options)
        "remove-urls" (clean-text (remove-urls-from-text text)
                                  other-options)
        "remove-extra-whitespaces" (clean-text (remove-extra-whitespaces-from-text text)

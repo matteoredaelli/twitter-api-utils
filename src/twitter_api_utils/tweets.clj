@@ -52,8 +52,10 @@
   [tweets]
   (let [text (clojure.string/join " " (map :text tweets))]
     (clean-text text
-                ["remove-RTs" 
+                ["remove-RTs"
+                 "remove-hashtags"
                  "remove-urls"
+                 "remove-user_mentions"
                  "tolower"
                  "remove-extra-whitespaces"])))
 
