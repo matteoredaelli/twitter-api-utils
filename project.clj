@@ -1,6 +1,6 @@
 (defproject twitter-api-utils "0.1.0-SNAPSHOT"
-  :description "FIXME: write description"
-  :url "example.com/FIXME"
+  :description "Some useful functions about twitter"
+  :url "https://github.com/matteoredaelli/twitter-api-utils"
   :license {:name "GPL V3+"
             :url "http://www.gnu.org/copyleft/gpl.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
