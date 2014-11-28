@@ -83,14 +83,16 @@
         urls_titles (map #(safe-get-url-title %) urls)]
     {;;:words words
      :top_words (most-frequent-n-with-counts filtered_words n)
-     :hashtags hashtags
+     ;;:hashtags hashtags
      :top_hashtags (most-frequent-n-with-counts hashtags n)
-     :user_mentions user_mentions
+     ;;:user_mentions user_mentions
      :top_user_mentions (most-frequent-n-with-counts user_mentions n)
      :urls urls
      :urls_domains urls_domains
-     urls_titles (filter #(not (re-find #"^clj-http" %)) (remove nil? urls_titles))
-     ;;:urls_titles  urls_titles
+     ;;urls_titles (filter #(not (re-find #"^clj-http" %)) (remove nil? urls_titles))
+     urls_titles (remove nil? urls_titles)
+
+     ;;:top_words_urls_titles  (extract-words-from-text urls_titles)
      }))
     
 (defn timeline-statistics-to-html [tweets stats title]

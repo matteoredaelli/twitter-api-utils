@@ -55,6 +55,8 @@
     :parse-fn #(Integer/parseInt %)]
    ["-j" "--json"
     :default 0]
+   ["-H" "--html"
+    :default 0]
    ["-v" nil "Verbosity level"
     :id :verbosity
     :default 0
@@ -79,6 +81,7 @@
         stats (tweets-statistics tweets top stopwords)
         ]
     (cond (:json options) (println (generate-string stats))
+          (:html options) (println (timeline-statistics-to-html tweets stats screen-name))
           to (let [body (timeline-statistics-to-html tweets stats screen-name)]
                (send-message {:host "localhost"}
                              {:from [from]
