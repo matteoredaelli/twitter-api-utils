@@ -13,7 +13,7 @@
                  [environ "1.0.1"]
                  [clojurewerkz/urly "1.0.0"]
                  [selmer "0.9.7"]
-                 [clj-http "2.0.0"]
+                 [http-kit "2.1.19"]
                  [org.clojure/tools.cli "0.3.3"]
                  [com.draines/postal "1.11.3"]
                  ]

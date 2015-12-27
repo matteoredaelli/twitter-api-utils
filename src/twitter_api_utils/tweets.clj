@@ -78,17 +78,17 @@
         filtered_words (remove-stopwords-from-words words stopwords)
         hashtags (extract-entities-hashtags-from-tweets tweets)
         user_mentions (extract-entities-user_mentions-from-tweets tweets)
-        urls (distinct (extract-entities-urls-from-tweets tweets))
-        urls_domains (distinct (extract-domains-from-urls urls))
-        urls_titles (map #(safe-get-url-title %) urls)]
+        urls (map get-real-url (extract-entities-urls-from-tweets tweets))
+        urls_domains (extract-domains-from-urls urls)
+        urls_titles (map #(safe-get-url-title %) (distinct urls))]
     {;;:words words
      :top_words (most-frequent-n-with-counts filtered_words n)
      ;;:hashtags hashtags
      :top_hashtags (most-frequent-n-with-counts hashtags n)
      ;;:user_mentions user_mentions
      :top_user_mentions (most-frequent-n-with-counts user_mentions n)
-     :urls urls
-     :urls_domains urls_domains
+     :urls (most-frequent-n-with-counts urls n)
+     :urls_domains (most-frequent-n-with-counts urls_domains n)
      ;;urls_titles (filter #(not (re-find #"^clj-http" %)) (remove nil? urls_titles))
      urls_titles (remove nil? urls_titles)
 

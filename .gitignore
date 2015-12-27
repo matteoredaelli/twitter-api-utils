@@ -12,3 +12,4 @@ pom.xml.asc
 .lein-failures
 .lein-env
 .nrepl-port
+stopwords*.txt

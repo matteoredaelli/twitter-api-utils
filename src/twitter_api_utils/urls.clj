@@ -15,28 +15,37 @@
 
 (ns twitter-api-utils.urls
   (:require ;; my
-   [clj-http.client]
+   [org.httpkit.client :as http]
    )
   (:use 
    [clojurewerkz.urly.core]
    [environ.core]
    )) 
 
+(defn extract-domain-from-url
+  [url]
+  (str (protocol-of url) "://" (host-of url)))
+
 (defn extract-domains-from-urls
   [urls]
-  (map #(str (protocol-of %) "://" (host-of %)) urls))
+  (map extract-domain-from-url urls))
 
+(defn get-real-url
+  [url]
+  (let [resp (http/head url)]
+      (-> @resp :opts :url)))
 
-;; (map #(try (get-url-title %) (catch Exception e (.getMessage e))) u)
 (defn get-url-title [url]
-  (let [headers (:headers (clj-http.client/head url {:socket-timeout 5000 :conn-timeout 5000}))
-        content-type (headers "Content-Type")
-        is-html (count (re-seq #"text/html" content-type))]
-    (if is-html
-      (let [body (:body clj-http.client/get url{:socket-timeout 5000 :conn-timeout 5000} )
-            title (clojure.string/trim (nth (re-find #"<title>(.*)</title>" body) 1))]
-        title)
-      content-type)))
+  (let [resp (http/head url)]
+    (let [headers (:headers @resp)
+          content-type (:content-type headers)
+          is-html (count (re-seq #"text/html" content-type))]
+      (if is-html
+        (let [resp (http/get url)]
+          (let [body (:body @resp)
+                title (clojure.string/trim (nth (re-find #"<title>(.*)</title>" body) 1))]
+               title))
+        content-type))))
 
 (defn safe-get-url-title [url]
   (try (get-url-title url)
