@@ -3,22 +3,22 @@
   :url "https://github.com/matteoredaelli/twitter-api-utils"
   :license {:name "GPL V3+"
             :url "http://www.gnu.org/copyleft/gpl.html"}
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
                  ;; my
-                 [twitter-api "0.7.5"]
+                 [twitter-api "0.7.8"]
                  ;; for JSON
                  ;;[org.clojure/data.json "0.2.4"]
                  [cheshire "5.3.1"]
                  ;; configuration file
-                 [environ "0.5.0"]
+                 [environ "1.0.1"]
                  [clojurewerkz/urly "1.0.0"]
-                 [selmer "0.7.2"]
-                 [clj-http "1.0.0"]
-                 [org.clojure/tools.cli "0.3.1"]
-                 [com.draines/postal "1.11.2"]
+                 [selmer "0.9.7"]
+                 [clj-http "2.0.0"]
+                 [org.clojure/tools.cli "0.3.3"]
+                 [com.draines/postal "1.11.3"]
                  ]
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]
-                   :plugins [[lein-environ "0.5.0"]
+                   :plugins [[lein-environ "1.0.1"]
                              [cider/cider-nrepl "0.7.0"]]
                    }}
   :main twitter-api-utils.core
