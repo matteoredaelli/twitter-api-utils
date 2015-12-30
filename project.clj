@@ -1,4 +1,4 @@
-(defproject twitter-api-utils "0.2.0"
+(defproject twitter-api-utils "0.3.0-SNAPSHOT"
   :description "Some useful functions about twitter"
   :url "https://github.com/matteoredaelli/twitter-api-utils"
   :license {:name "GPL V3+"
@@ -17,9 +17,13 @@
                  [org.clojure/tools.cli "0.3.3"]
                  [com.draines/postal "1.11.3"]
                  ]
+
+  :sign-releases false
+  
   :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]
                    :plugins [[lein-environ "1.0.1"]
                              [cider/cider-nrepl "0.7.0"]]
                    }}
   :main twitter-api-utils.core
+  :aot [twitter-api-utils.core]
   )
