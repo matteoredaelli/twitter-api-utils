@@ -31,6 +31,12 @@
 (defn remove-hashtags-from-text [text]
   (clojure.string/replace text #"#[^ !?,;:.]+" ""))
 
+(defn remove-numbers-from-text [text]
+  (clojure.string/replace text #"[0-9]+" ""))
+
+(defn remove-1letter-words-from-text [text]
+  (clojure.string/replace text #" [a-zA-Z0-9] " " "))
+
 (defn remove-user_mentions-from-text [text]
   (clojure.string/replace text #"@[^  !?,;:.]+" ""))
 
@@ -44,6 +50,8 @@
     (case option
        nil text
        [] text
+       "remove-1letter-words-from-text" (clean-text (remove-hashtags-from-text text)
+                                     other-options)
        "remove-RTs" (clean-text (clojure.string/replace text
                                                         "RT "
                                                         " ")
@@ -51,7 +59,9 @@
        "remove-hashtags" (clean-text (remove-hashtags-from-text text)
                                      other-options)
        "remove-user_mentions" (clean-text (remove-user_mentions-from-text text)
-                                 other-options)
+                                          other-options)
+       "remove-numbers" (clean-text (remove-numbers-from-text text)
+                                    other-options)
        "remove-urls" (clean-text (remove-urls-from-text text)
                                  other-options)
        "remove-extra-whitespaces" (clean-text (remove-extra-whitespaces-from-text text)

@@ -1,4 +1,4 @@
-(defproject twitter-api-utils "0.1.0-SNAPSHOT"
+(defproject twitter-api-utils "0.2.0"
   :description "Some useful functions about twitter"
   :url "https://github.com/matteoredaelli/twitter-api-utils"
   :license {:name "GPL V3+"
